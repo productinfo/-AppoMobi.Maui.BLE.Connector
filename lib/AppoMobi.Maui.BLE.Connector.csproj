@@ -16,7 +16,7 @@
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 
-		<Version>1.0.0.1-pre</Version>
+		<Version>1.0.0.2-pre</Version>
 		<Description>Bluetooth LE Connector for .Net Maui</Description>
 		<PackageTags>maui ble bluetooth</PackageTags>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -37,7 +37,13 @@
 
 	<ItemGroup>
 	  <Folder Include="Platforms\MacCatalyst\" />
-	  <Folder Include="Platforms\Windows\" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+	  <Compile Update="Platforms\Windows\BluetoothPermissions.Windows.cs">
+	    <ExcludeFromCurrentConfiguration>false</ExcludeFromCurrentConfiguration>
+	  </Compile>
 	</ItemGroup>
 
 </Project>
