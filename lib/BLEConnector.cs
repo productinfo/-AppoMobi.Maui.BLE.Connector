@@ -263,7 +263,7 @@ namespace AppoMobi.Maui.BLE.Connector
 					});
 					await Task.Delay(10);
 
-					await Bluetooth.Adapter.StartScanningForDevicesAsync(FilterServiceUuids.ToArray(), InternalFIlter);
+					await Bluetooth.Adapter.StartScanningForDevicesAsync(FilterServiceUuids.ToArray(), InternalFIlter, false, cancel);
 
 					while (Bluetooth.Adapter.IsScanning)
 					{
