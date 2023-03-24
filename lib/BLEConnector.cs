@@ -1,5 +1,6 @@
 ﻿using AppoMobi.Maui.BLE.Enums;
 using AppoMobi.Maui.BLE.EventArgs;
+using AppoMobi.Specials.Extensions;
 using Microsoft.Maui.Controls.Internals;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -257,13 +258,15 @@ namespace AppoMobi.Maui.BLE.Connector
 				{
 					//todo check UI thread
 
-					MainThread.BeginInvokeOnMainThread(() =>
+					MainThread.BeginInvokeOnMainThread(async () =>
 					{
 						FoundDevices.Clear();
 					});
+
 					await Task.Delay(10);
 
-					await Bluetooth.Adapter.StartScanningForDevicesAsync(FilterServiceUuids.ToArray(), InternalFIlter, false, cancel);
+					await Bluetooth.Adapter.StartScanningForDevicesAsync(FilterServiceUuids.ToArray(),
+						InternalFIlter, false, cancel);
 
 					while (Bluetooth.Adapter.IsScanning)
 					{
@@ -307,13 +310,24 @@ namespace AppoMobi.Maui.BLE.Connector
 					Rssi = device.Rssi
 				};
 
-				MainThread.BeginInvokeOnMainThread(() =>
-				{
-					// Update the UI
-					FoundDevices.Add(item);
-				});
+				Debug.WriteLine($"[Connector] Found device ({FoundDevices.Count + 1}) {item.Title}");
 
-				return item;
+				var existing = FoundDevices.FirstOrDefault(x => x.Id == item.Id);
+				if (existing == null)
+				{
+					MainThread.BeginInvokeOnMainThread(() =>
+					{
+						// Update the UI
+						FoundDevices.Add(item);
+					});
+					return item;
+				}
+				else
+				{
+					Reflection.MapProps(item, existing);
+					return existing;
+				}
+
 			}
 
 			return null;
@@ -325,6 +339,7 @@ namespace AppoMobi.Maui.BLE.Connector
 
 		public async Task Disconnect()
 		{
+
 			if (ConnectedDevice != null)
 			{
 				foreach (var service in ConnectedDevice.Services)
@@ -336,9 +351,12 @@ namespace AppoMobi.Maui.BLE.Connector
 				await Bluetooth.Adapter.DisconnectDeviceAsync(ConnectedDevice.Device);
 
 				ConnectedDevice.State = ConnectionState.Disconnected;
-				ConnectedDevice = null;
-				Selected = null;
+
 			}
+
+			ConnectedDevice = null;
+			Selected = null;
+			IsConnected = false;
 		}
 
 		/// <summary>
@@ -431,6 +449,8 @@ namespace AppoMobi.Maui.BLE.Connector
 
 		}
 
+#if (ANDROID || IOS || MACCATALYST || WINDOWS || TIZEN)
+
 		public async Task<BleDeviceViewModel> ConnectDevice(string Uid, int msDelay = 5000)
 		{
 			try
@@ -476,7 +496,6 @@ namespace AppoMobi.Maui.BLE.Connector
 				ConnectedDevice = existing;
 
 				return ConnectedDevice;
-
 			}
 			catch (Exception e)
 			{
@@ -484,6 +503,10 @@ namespace AppoMobi.Maui.BLE.Connector
 				return null;
 			}
 		}
+
+#endif
+
+
 
 	}
 }
