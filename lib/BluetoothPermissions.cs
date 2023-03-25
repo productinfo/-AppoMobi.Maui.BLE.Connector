@@ -3,6 +3,17 @@ public partial class BluetoothPermissions : Permissions.BasePlatformPermission
 {
 	public static bool NeedGPS { get; protected set; }
 
+
+#if (NET7_0 && !ANDROID && !IOS && !MACCATALYST && !WINDOWS && !TIZEN)
+
+	public static bool CheckGpsIsAvailable()
+	{
+		throw new NotImplementedException();
+	}
+
+
+#endif
+
 	public static async Task<PermissionStatus> CheckBluetoothStatus()
 	{
 		try
