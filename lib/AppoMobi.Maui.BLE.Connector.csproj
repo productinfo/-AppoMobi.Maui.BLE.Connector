@@ -16,7 +16,7 @@
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</TargetPlatformMinVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 
-		<Version>7.0.0.3</Version>
+		<Version>7.0.0.4</Version>
 
 		<Description>Bluetooth LE Connector for .Net Maui</Description>
 		<PackageTags>maui ble bluetooth</PackageTags>
@@ -37,15 +37,11 @@
 
 
 	<ItemGroup>
-	  <!--<PackageReference Include="AppoMobi.Maui.BLE" Version="7.0.0.1" />-->
+	  <PackageReference Include="AppoMobi.Maui.BLE" Version="7.0.0.2" />
 	  <PackageReference Include="AppoMobi.Specials" Version="7.0.0.2" />
 	</ItemGroup>
 
-
-	<ItemGroup>
-	  <ProjectReference Include="..\..\AppoMobi.Maui.BLE\src\AppoMobi.Maui.BLE.csproj" />
-	</ItemGroup>
-
+ 
 
 
 
