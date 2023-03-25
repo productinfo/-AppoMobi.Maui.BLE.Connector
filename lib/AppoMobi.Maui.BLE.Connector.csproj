@@ -37,8 +37,13 @@
 
 
 	<ItemGroup>
-	  <PackageReference Include="AppoMobi.Maui.BLE" Version="7.0.0.1" />
+	  <!--<PackageReference Include="AppoMobi.Maui.BLE" Version="7.0.0.1" />-->
 	  <PackageReference Include="AppoMobi.Specials" Version="7.0.0.2" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\AppoMobi.Maui.BLE\src\AppoMobi.Maui.BLE.csproj" />
 	</ItemGroup>
 
 

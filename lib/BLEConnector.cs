@@ -467,21 +467,21 @@ namespace AppoMobi.Maui.BLE.Connector
 			{
 				//the completion means nothing here... the callback will be called upon connection state change
 				var cancel = new CancellationTokenSource();
-				//cancel.CancelAfter(msDelay);
+				cancel.CancelAfter(msDelay);
 
 				device = await Bluetooth.Adapter.ConnectToKnownDeviceAsync(Guid.Parse(Uid), default, cancel.Token, true);
 
-				await Task.Delay(msDelay, cancel.Token);
-
-				if (device.State != DeviceState.Connected)
-				{
-					return null;
-				}
+				//await Task.Delay(msDelay, cancel.Token);
 
 			}
 			catch (Exception e)
 			{
-				Debug.WriteLine(e);
+				System.Diagnostics.Trace.WriteLine(e);
+			}
+
+			if (device == null || device.State != DeviceState.Connected)
+			{
+				return null;
 			}
 
 			try
