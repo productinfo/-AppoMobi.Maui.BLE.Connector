@@ -121,10 +121,13 @@ namespace AppoMobi.Maui.BLE.Connector
 		protected virtual void OnDeviceConnected(object sender, DeviceEventArgs e)
 		{
 			IsConnected = true;
-			//_ui.ShowToast("Подключено");
+			LastConnectedTo = e.Device;
 		}
 
-
+		/// <summary>
+		/// For internal use
+		/// </summary>
+		public Device LastConnectedTo { get; protected set; }
 
 		private bool _IsBusy;
 		public bool IsBusy
@@ -337,9 +340,22 @@ namespace AppoMobi.Maui.BLE.Connector
 			ImportDevice(e.Device);
 		}
 
+		/// <summary>
+		/// For internal use only
+		/// </summary>
+		/// <returns></returns>
+		public async Task DisconnectLastDevice()
+		{
+			if (LastConnectedTo != null)
+			{
+				System.Diagnostics.Trace.WriteLine("[CONNECTOR] LastDevice disconnected");
+				await Bluetooth.Adapter.DisconnectDeviceAsync(LastConnectedTo);
+			}
+			LastConnectedTo = null;
+		}
+
 		public async Task Disconnect()
 		{
-
 			if (ConnectedDevice != null)
 			{
 				foreach (var service in ConnectedDevice.Services)
@@ -348,11 +364,11 @@ namespace AppoMobi.Maui.BLE.Connector
 				}
 				ConnectedDevice.Services.Clear();
 
-				await Bluetooth.Adapter.DisconnectDeviceAsync(ConnectedDevice.Device);
-
 				ConnectedDevice.State = ConnectionState.Disconnected;
 
 			}
+
+			await DisconnectLastDevice();
 
 			ConnectedDevice = null;
 			Selected = null;
@@ -476,11 +492,13 @@ namespace AppoMobi.Maui.BLE.Connector
 			}
 			catch (Exception e)
 			{
-				System.Diagnostics.Trace.WriteLine(e);
+				System.Diagnostics.Trace.WriteLine(e); //we could have a task canceled here..
 			}
 
 			if (device == null || device.State != DeviceState.Connected)
 			{
+				await DisconnectLastDevice(); //cleanup in case we had cancel but device is still connected
+
 				return null;
 			}
 
