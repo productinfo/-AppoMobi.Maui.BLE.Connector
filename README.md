@@ -1,7 +1,9 @@
 # AppoMobi.Maui.BLE.Connector
 
 Wrapper for AppoMobi.Maui.BLE (https://github.com/taublast/-AppoMobi.Maui.BLE)
+
 Tested to work fine on Android, iOS, MacCatalyst and Windows.
+
 Remains in -PRE state
 
 ## Roadmap:
