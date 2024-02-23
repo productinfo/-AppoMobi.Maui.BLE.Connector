@@ -5,8 +5,7 @@ Remains in -PRE state
 
 ## Roadmap:
 
-- Add example
-- Test and fix Windows platform permissions
+- Add example app
 
 
 ## Quick Start
